@@ -1,6 +1,6 @@
-# DeepDream-StyleTransfer
+# DeepDream, StyleTransfer Projects
 
-Welcome to the DeepDream-StyleTransfer repository, where you can explore the fascinating world of creative image transformations using DeepDream and Style Transfer techniques in image processing.
+Welcome to this repository, where you can explore the fascinating world of creative image transformations using DeepDream and Style Transfer techniques in image processing.
 
 ## About
 
