@@ -1,6 +1,8 @@
-# DeepDream, StyleTransfer Projects
+# DeepDream and Neural Style Transfer Projects
 
-Welcome to this repository, where you can explore the fascinating world of creative image transformations using DeepDream and Style Transfer techniques in image processing.
+This repository contains projects related to DeepDream and Neural Style Transfer (NST), including:
+- Flask-based web applications for DeepDream and NST.
+- Google Colab notebooks for experimenting with DeepDream and NST.
 
 ## About
 
@@ -16,12 +18,13 @@ This repository contains notebooks for applying DeepDream and Style Transfer to 
 ## Contents
 
 - DeepDream Notebook
-- Style Transfer Notebook
+- Style Transfer Notebooks
+- Flask-based web applications for DeepDream and NST
 - Sample images for experimentation
 
 ## Getting Started
 
-To get started, simply clone this repository and follow the instructions in the respective notebooks. Make sure you have the required dependencies installed.
+To get started, simply clone this repository and follow the instructions in the respective notebooks., web-applications. Make sure you have the required dependencies installed.
 
 ## Dependencies
 
@@ -29,7 +32,9 @@ To get started, simply clone this repository and follow the instructions in the 
 - Jupyter Notebook
 - TensorFlow
 - PIL (Python Imaging Library)
+- Flask
 
+---
 # Results
 
 ## DeepDream
@@ -69,7 +74,18 @@ Generated Image:
 
 ![Image 1](results/efficient.png)
 
+---
+## Application Interface
 
+**Neural Style Transfer**
+
+<img src="ui/ui.PNG" alt="Original Image" width="700">
+
+<br>
+
+**DeepDream**
+
+<img src="ui/ui-deepdream.PNG" alt="Original Image" width="700">
 
 
 
