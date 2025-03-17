@@ -57,9 +57,9 @@ Generated Images:
 
 Generated Image:
 
-|  |  |  |  |
-|---------|---------|---------|---------|
-| ![Image 1](results/maganta.png) | ![Image 2](results/maganta2.png) | ![Image 3](results/maganta3.png) | ![Image 4](results/maganta4.png) |
+|  |  
+|---------|
+| ![Image 1](results/magenta.png) | 
 
 
 ### Efficientnet
