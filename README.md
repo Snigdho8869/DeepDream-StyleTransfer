@@ -53,7 +53,7 @@ Generated Images:
 
 ## Style Transfer
 
-### Arbitary
+### Magenta Arbitary Model
 
 Generated Image:
 
@@ -62,7 +62,7 @@ Generated Image:
 | ![Image 1](results/magenta.png) | 
 
 
-### Efficientnet
+### Efficientnet Model
 
 Generated Image:
 
