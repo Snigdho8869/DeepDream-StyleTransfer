@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Style Transfer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+    </nav>
+
+    <h1>Neural Style Transfer</h1>
+
+    <form action="/process" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <label for="style_image_name">Choose Style:</label>
+        <select id="style_image_name" name="style_image_name">
+            <option value="IMAGE_1">Image 1</option>
+            <option value="IMAGE_2">Image 2</option>
+            <option value="IMAGE_3">Image 3</option>
+            <option value="IMAGE_4">Image 4</option>
+            <option value="IMAGE_5">Image 5</option>
+            <option value="IMAGE_6">Image 6</option>
+            <option value="IMAGE_7">Image 7</option>
+            <option value="IMAGE_8">Image 8</option>
+            <option value="IMAGE_9">Image 9</option>
+            <option value="IMAGE_10">Image 10</option>
+            <option value="IMAGE_11">Image 11</option>
+            <option value="IMAGE_12">Image 12</option>
+        </select>
+        <label for="style_weight">Style Weight (1 to 20.0):</label>
+        <input type="range" id="style_weight" name="style_weight" min="1.0" max="20.0" step="1.0" value="20.0" oninput="updateSliderValue(this.value)">
+        <span id="slider_value">20.0</span>
+        <label for="content_image">Choose Content:</label>
+        <input type="file" id="content_image" name="content_image">
+        <div id="validation-message" class="validation-message">Please upload an image.</div>
+        <input type="submit" id="stylize_button" value="Stylize">
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+        </div>
+    </form>
+
+    {% if stylized_image %}
+    <div class="result-container">
+        <h1>Stylized Image</h1>
+        <img src="{{ stylized_image }}" alt="Stylized Image" class="stylized-image">
+        <br>
+        <div class="button-container">
+            <a href="{{ stylized_image }}" download="stylized_image.jpg" class="button">Download Image</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <h1>Style Image</h1>
+    <div class="image-collection">
+        <figure>
+        <img src="static/IMAGE_1.jpg" alt="Image 1">
+	<figcaption>Image 1</figcaption>
+	</figure>
+	<figure>
+        <img src="static/IMAGE_2.jpg" alt="Image 2">
+	<figcaption>Image 2</figcaption>
+	</figure>
+	<figure>
+        <img src="static/IMAGE_3.jpg" alt="Image 3">
+	<figcaption>Image 3</figcaption>
+	</figure>
+	<figure>
+        <img src="static/IMAGE_4.jpg" alt="Image 4">
+	<figcaption>Image 4</figcaption>
+	</figure>
+	<figure>
+        <img src="static/IMAGE_5.jpg" alt="Image 5">
+	<figcaption>Image 5</figcaption>
+	</figure>
+	<figure>
+        <img src="static/IMAGE_6.jpg" alt="Image 6">
+	<figcaption>Image 6</figcaption>
+	</figure>
+	<figure>
+        <img src="static/IMAGE_7.jpg" alt="Image 7">
+	<figcaption>Image 7</figcaption>
+	</figure>
+	<figure>
+        <img src="static/IMAGE_8.jpg" alt="Image 8">
+	<figcaption>Image 8</figcaption>
+	</figure>
+	<figure>
+        <img src="static/IMAGE_9.jpg" alt="Image 9">
+	<figcaption>Image 9</figcaption>
+	</figure>
+	<figure>
+	<img src="static/IMAGE_10.jpg" alt="Image 10">
+	<figcaption>Image 10</figcaption>
+	</figure>
+	<figure>
+	<img src="static/IMAGE_11.jpg" alt="Image 11">
+	<figcaption>Image 11</figcaption>
+	</figure>
+	<figure>
+	<img src="static/IMAGE_12.jpg" alt="Image 12">
+	<figcaption>Image 12</figcaption>
+	</figure>
+    </div>
+
+    <div class="footer">
+        <p>All rights reserved &copy; 2023 Neural Style Transfer</p>
+        <p>Follow me on <a href="https://github.com/Snigdho8869" target="_blank">Github</a> and <a href="https://www.facebook.com/zahidul.snigdho/" target="_blank">Facebook</a></p>
+    </div>
+
+    <script>
+        function validateForm() {
+            const fileInput = document.getElementById('content_image');
+            const validationMessage = document.getElementById('validation-message');
+            const stylizeButton = document.getElementById('stylize_button');
+            const loadingDiv = document.getElementById('loading');
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                validationMessage.style.display = 'block';
+                return false; 
+            } else {
+                validationMessage.style.display = 'none';
+                stylizeButton.disabled = true; 
+                loadingDiv.style.display = 'flex'; 
+                return true; 
+            }
+        }
+
+        function updateSliderValue(value) {
+            document.getElementById('slider_value').innerText = value;
+        }
+
+       
+        window.onload = function() {
+            const stylizeButton = document.getElementById('stylize_button');
+            const loadingDiv = document.getElementById('loading');
+
+            if ("{{ stylized_image }}") {
+                stylizeButton.disabled = false;
+                loadingDiv.style.display = 'none';
+            }
+
+            if (window.performance && window.performance.navigation.type === 1) {
+               
+                window.location.href = "{{ url_for('index') }}";
+            }
+        };
+    </script>
+</body>
+</html>
