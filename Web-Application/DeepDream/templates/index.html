@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepDream Image Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .download-btn {
+            background-color: #2196F3;
+            display: none;
+            margin-top: 10px;
+        }
+        .download-btn:hover {
+            background-color: #0b7dda;
+        }
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .image-box {
+            width: 48%;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .image-box img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .frames-container {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-top: 20px;
+            padding: 10px 0;
+            display: none;
+        }
+        .frame-thumb {
+            display: inline-block;
+            margin-right: 10px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DeepDream Image Generator</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="image">Upload Image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="style">Select Style:</label>
+                <select id="style" name="style">
+                    <option value="Style 1">Style 1</option>
+                    <option value="Style 2">Style 2</option>
+                    <option value="Style 3">Style 3</option>
+                    <option value="Style 4">Style 4</option>
+                    <option value="Style 5">Style 5</option>
+                    <option value="Style 6">Style 6</option>
+                    <option value="Style 7">Style 7</option>
+                    <option value="Style 8">Style 8</option>
+                    <option value="Style 9">Style 9</option>
+                    <option value="Style 10">Style 10</option>
+                    <option value="Style 11">Style 11</option>
+                    <option value="Style 12">Style 12</option>
+                    <option value="Style 13">Style 13</option>
+                    <option value="Style 14">Style 14</option>
+                    <option value="Style 15">Style 15</option>
+                    <option value="Style 16">Style 16</option>
+                    <option value="Style 17">Style 17</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="iterations">Number of Iterations (more = stronger effect):</label>
+                <input type="number" id="iterations" name="iterations" min="3" max="20" value="10">
+            </div>
+            <button type="submit" id="processBtn">Generate DeepDream Image</button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing your image. This may take a minute...</p>
+        </div>
+        
+        <div class="image-container">
+            <div class="image-box">
+                <h3>Original Image</h3>
+                <img id="originalImage" src="" alt="Original image will appear here">
+            </div>
+            <div class="image-box">
+                <h3>DeepDream Result</h3>
+                <img id="resultImage" src="" alt="Processed image will appear here">
+                <a id="downloadLink" download="deepdream_result.jpg">
+                    <button class="download-btn" id="downloadBtn">Download Result</button>
+                </a>
+            </div>
+        </div>
+        
+        <div class="frames-container" id="framesContainer">
+            <h3>Processing Frames (Click to view)</h3>
+            <div id="frames"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('uploadForm');
+            const loading = document.getElementById('loading');
+            const originalImage = document.getElementById('originalImage');
+            const resultImage = document.getElementById('resultImage');
+            const framesContainer = document.getElementById('framesContainer');
+            const framesDiv = document.getElementById('frames');
+            const downloadLink = document.getElementById('downloadLink');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            document.getElementById('image').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        originalImage.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                loading.style.display = 'block';
+                resultImage.src = '';
+                framesContainer.style.display = 'none';
+                framesDiv.innerHTML = '';
+                downloadBtn.style.display = 'none';
+                
+                const formData = new FormData(form);
+                
+                fetch('/process', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    loading.style.display = 'none';
+                    
+                    const styleSelect = document.getElementById('style');
+                    const selectedStyle = styleSelect.options[styleSelect.selectedIndex].text.split(' - ')[0];
+                    
+                    const imageData = 'data:image/jpeg;base64,' + data.result;
+                    resultImage.src = imageData;
+                    
+                    downloadLink.href = imageData;
+                    downloadLink.download = `deepdream_${selectedStyle}_${new Date().getTime()}.jpg`;
+                    downloadBtn.style.display = 'inline-block';
+                    
+                    if (data.frames && data.frames.length > 0) {
+                        framesContainer.style.display = 'block';
+                        data.frames.forEach((frame, index) => {
+                            const img = document.createElement('img');
+                            img.src = 'data:image/jpeg;base64,' + frame;
+                            img.className = 'frame-thumb';
+                            img.alt = 'Processing frame ' + (index + 1);
+                            img.addEventListener('click', function() {
+                                resultImage.src = this.src;
+                                downloadLink.href = this.src;
+                                downloadLink.download = `deepdream_${selectedStyle}_frame${index+1}.jpg`;
+                            });
+                            framesDiv.appendChild(img);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    loading.style.display = 'none';
+                    alert('Error processing image. Please try again.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
