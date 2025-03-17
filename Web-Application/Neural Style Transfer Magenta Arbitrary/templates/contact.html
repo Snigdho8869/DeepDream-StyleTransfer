@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Contact Us</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+  <body>
+
+	<nav>
+  	<ul>
+	 <li><a href="{{ url_for('index') }}">Home</a></li>
+  	 <li><a href="{{ url_for('about') }}">About</a></li>
+   	 <li><a href="{{ url_for('contact') }}">Contact</a></li>
+  	</ul>
+	</nav>
+
+    <div id="contact">
+      <h2 class="contact-h2">Contact</h2>
+      <form class="contact-form"  id="contact-form" action="/send-email" method="POST">
+        <label for="name">Name:</label>
+        <input class="contact-input" type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input class="contact-input" type="email" id="email" name="email" required>
+
+        <label for="message">Message:</label>
+        <textarea class="contact-textarea" id="message" name="message" required></textarea>
+
+        <button class="contact-button" type="submit" name="submit">Send</button>
+      </form>
+    </div>
+
+    <div class="footer">
+        <p>All rights reserved &copy; 2023 Neural Style Transfer</p>
+        <p>Follow me on <a href="https://github.com/Snigdho8869" target="_blank">Github</a> and <a href="https://www.facebook.com/zahidul.snigdho/" target="_blank">Facebook</a></p>
+    </div>
+
+  </body>
+</html>
