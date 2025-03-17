@@ -5,12 +5,32 @@ from io import BytesIO
 import tensorflow.compat.v1 as tf
 import base64
 from flask import Flask, render_template, request, jsonify, send_file
+import requests
+import zipfile
 
 tf.disable_eager_execution()
 
 app = Flask(__name__)
 
 MODEL_PATH = 'tensorflow_inception_graph.pb'
+
+def download_model():
+    if not os.path.exists(MODEL_PATH):
+        model_url = "https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip"
+        zip_path = "inception5h.zip"
+        
+        print("Downloading model...")
+        response = requests.get(model_url)
+        with open(zip_path, 'wb') as f:
+            f.write(response.content)
+        
+        print("Extracting model...")
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall()
+        
+        os.remove(zip_path)
+        
+        print("Model downloaded and extracted successfully.")
 
 def initialize_model():
     graph = tf.Graph()
@@ -110,11 +130,6 @@ def get_style_options(layer_name="mixed4d_3x3_bottleneck_pre_relu"):
     }
     return style_options
 
-def download_model():
-    if not os.path.exists(MODEL_PATH):
-        os.system("wget https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip")
-        os.system("unzip inception5h.zip")
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -176,7 +191,6 @@ def process_image():
 
 @app.route('/download/<style>')
 def download_image(style):
-
     pass
 
 if __name__ == '__main__':
